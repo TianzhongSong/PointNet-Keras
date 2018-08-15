@@ -2,6 +2,7 @@ from data_loader import DataGenerator
 from model_cls import PointNet
 from keras.callbacks import ModelCheckpoint
 from keras.optimizers import Adam
+from schedules import onetenth_50_75
 import os
 import matplotlib
 matplotlib.use('AGG')
@@ -58,7 +59,8 @@ def main():
 
     model = PointNet(nb_classes)
     model.summary()
-    adam = Adam(lr=0.001, decay=0.7)
+    lr = 0.0001
+    adam = Adam(lr=lr)
     model.compile(optimizer=adam,
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
@@ -72,7 +74,7 @@ def main():
                                   epochs=epochs,
                                   validation_data=val.generator(),
                                   validation_steps=2468 // batch_size,
-                                  callbacks=[checkpoint],
+                                  callbacks=[checkpoint, onetenth_50_75(lr)],
                                   verbose=1)
 
     plot_history(history, './results/')
