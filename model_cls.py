@@ -22,8 +22,8 @@ class MatMul(Layer):
         if len(input_shape[0]) != 3 or len(input_shape[1]) != 3:
             raise ValueError('The dimensions of each element of inputs should be 3')
 
-        if input_shape[0][-1] != input_shape[1][-1]:
-            raise ValueError('The dimension 1 of inputs[0] should match the dimension 0 of inputs[1]')
+        if input_shape[0][-1] != input_shape[1][1]:
+            raise ValueError('The last dimension of inputs[0] should match the dimension 1 of inputs[1]')
 
     def call(self, inputs):
         if not isinstance(inputs, list):
@@ -32,7 +32,7 @@ class MatMul(Layer):
         return tf.matmul(inputs[0], inputs[1])
 
     def compute_output_shape(self, input_shape):
-        output_shape = [input_shape[0][0], input_shape[0][1], input_shape[1][1]]
+        output_shape = [input_shape[0][0], input_shape[0][1], input_shape[1][-1]]
         return tuple(output_shape)
 
 
